@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>CodePlayer</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
+    <script type ="text/javascript" src="js.js"></script>
+    <link rel="stylesheet" href="css.css">
+
+</head>
+<body>
+ 
+    <div id="header">
+        <div id="logo">
+            CodePlayer
+        </div>
+
+        <div id="buttonContainer">
+
+            <div class="toggleButton active" id="html">
+                HTML
+            </div>
+            <div class="toggleButton" id="css">
+                CSS
+            </div>
+            <div class="toggleButton" id="javascript">
+                Javascript
+            </div>
+            <div class="toggleButton active" id="output">
+                Output
+            </div>
+        </div>
+
+    </div>
+
+    <div id="bodyContainer">
+
+        <textarea id="htmlTextArea" class="panel textpanel"><p>Hello World!</p></textarea>
+        <textarea id="cssTextArea" class="panel textpanel hidden">p {color: green;}</textarea>
+        <textarea id="javascriptTextArea" class="panel textpanel hidden">alert('test')</textarea>
+
+        <iframe id="outputPanel" class="panel">
+
+        </iframe>
+    </div>
+
+
+    <script type="text/javascript">
+
+        function updateOutput() 
+        {
+            $("iframe").contents().find("html").html("<html><head><style>" +$("#cssTextArea").val() + "</style><body>" + $("#htmlTextArea").val() + "</body></head></html>");   
+
+            document.getElementById("outputPanel").contentWindow.eval($("#javascriptTextArea").val());
+        }
+
+        updateOutput();
+
+        $(".toggleButton").hover(function()
+        {
+            $(this).addClass("highlight");
+        }, function() 
+        {
+            $(this).removeClass("highlight");
+        });
+
+        $(".toggleButton").click
+        (  
+            function() 
+            {
+               $(this).removeClass("highlight");
+               $(this).toggleClass("active");
+
+               $("#" + $(this).attr("id") + "TextArea").toggleClass("hidden");
+
+               var numberOfActivePanels = 4 - $(".hidden").length;
+
+                $(".panel").width(($(window).width() / numberOfActivePanels) - 15);
+            }
+        );
+
+        $(".panel").height($(window).height() - $("#header").height() - 15);
+
+        $(".textpanel").on('change keyup paste', function()
+        {
+            updateOutput();
+        })
+
+    </script>
+
+</body>
+</html>
